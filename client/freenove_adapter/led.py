@@ -1,6 +1,11 @@
 import time
 from rpi_ws281x import Color, PixelStrip
+import platform
+import os
 
+def is_raspberry_pi():
+    """Check if running on a Raspberry Pi"""
+    return platform.machine().startswith('arm') or os.path.exists('/sys/class/gpio')
 class Led:
     def __init__(self):
         # Detectar versão da placa de conexão

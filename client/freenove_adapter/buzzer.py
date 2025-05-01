@@ -1,5 +1,10 @@
 import RPi.GPIO as GPIO
+import platform
+import os
 
+def is_raspberry_pi():
+    """Check if running on a Raspberry Pi"""
+    return platform.machine().startswith('arm') or os.path.exists('/sys/class/gpio')
 class Buzzer:
     def __init__(self, pin=17):
         self.pin = pin

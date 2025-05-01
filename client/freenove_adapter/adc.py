@@ -1,6 +1,11 @@
 import smbus
 import time
+import platform
+import os
 
+def is_raspberry_pi():
+    """Check if running on a Raspberry Pi"""
+    return platform.machine().startswith('arm') or os.path.exists('/sys/class/gpio')
 class ADC:
     def __init__(self):
         # Detectar versão da placa de conexão

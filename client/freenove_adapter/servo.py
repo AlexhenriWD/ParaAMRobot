@@ -1,6 +1,11 @@
 import time
 import math
+import platform
+import os
 
+def is_raspberry_pi():
+    """Check if running on a Raspberry Pi"""
+    return platform.machine().startswith('arm') or os.path.exists('/sys/class/gpio')
 class Servo:
     def __init__(self):
         import Adafruit_PCA9685

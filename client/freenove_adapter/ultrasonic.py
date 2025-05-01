@@ -1,5 +1,11 @@
 import RPi.GPIO as GPIO
 import time
+import platform
+import os
+
+def is_raspberry_pi():
+    """Check if running on a Raspberry Pi"""
+    return platform.machine().startswith('arm') or os.path.exists('/sys/class/gpio')
 
 class Ultrasonic:
     def __init__(self, trig=23, echo=24, max_distance=300):

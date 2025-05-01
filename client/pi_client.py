@@ -95,25 +95,31 @@ class PiClient:
             self.connected = False
     
     def get_telemetry(self):
+        """Get telemetry data from sensors"""
         telemetry = {}
+        
         try:
-            # Leitura dos sensores
-            distance = self.ultrasonic.get_distance()
-            if distance is not None:
+            if self.simulation_mode:
+                # Simulated telemetry
                 telemetry["sensor"] = "ultrasonic"
-                telemetry["value"] = distance
+                telemetry["value"] = 50  # Simulated 50cm
+                telemetry["battery"] = 8.2  # Simulated battery voltage
+                telemetry["light"] = {"left": 1.5, "right": 1.8}  # Simulated light values
+            else:
+                # Real sensor readings
+                distance = self.ultrasonic.get_distance()
+                if distance is not None:
+                    telemetry["sensor"] = "ultrasonic"
+                    telemetry["value"] = distance
+                    
+                battery = self.adc.read_adc(2) * (3 if self.adc.pcb_version == 1 else 2)
+                telemetry["battery"] = battery
                 
-            # Leitura da bateria
-            battery = self.adc.read_adc(2) * (3 if self.adc.pcb_version == 1 else 2)
-            telemetry["battery"] = battery
-            
-            # Leitura dos fotoresistores
-            left_light = self.adc.read_adc(0)
-            right_light = self.adc.read_adc(1)
-            telemetry["light"] = {"left": left_light, "right": right_light}
-            
+                left_light = self.adc.read_adc(0)
+                right_light = self.adc.read_adc(1)
+                telemetry["light"] = {"left": left_light, "right": right_light}
         except Exception as e:
-            logger.error(f"Erro ao obter telemetria: {e}")
+            logger.error(f"Error getting telemetry: {e}")
         
         return telemetry
     
